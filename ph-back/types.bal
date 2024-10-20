@@ -28,6 +28,7 @@ public type SignInResponse record {|
     boolean isSystemAdmin?;
     int ph_id?; 
     int admin_id?;
+    string token?;
 
 |};
 public type Pharmacy record {|
