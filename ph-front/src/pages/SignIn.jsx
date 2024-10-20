@@ -9,9 +9,46 @@ const SignIn = () => {
   const [user, setUser] = useState({ name: "", email: "" });
   const navigate = useNavigate();
 
-  const verifyEmail = async (email) => {
-    const navigate = useNavigate();
+  // const verifyEmail = async (email) => {
+  //   const navigate = useNavigate();
   
+  //   try {
+  //     const response = await axios.post(
+  //       "http://localhost:9090/userApp/signIn",
+  //       {
+  //         email: email,
+  //       }
+  //     );
+  
+  //     if (response.data.isValid) {
+  //       // Store the JWT token in local storage
+  //       if (response.data.token) {
+  //         localStorage.setItem('jwtToken', response.data.token);
+  //       }
+  
+  //       // Store user role
+  //       localStorage.setItem('userRole', response.data.isSystemAdmin ? 'admin' : 'pharmacy');
+  
+  //       // Store user ID
+  //       localStorage.setItem('userId', response.data.isSystemAdmin ? response.data.admin_id : response.data.ph_id);
+  
+  //       if (!response.data.isSystemAdmin) {
+  //         navigate(`/pharmacy-admin/${response.data.ph_id}`);
+  //       } else {
+  //         navigate(`/system-admin/${response.data.admin_id}`);
+  //       }
+  //     } else {
+  //       alert("You are not registered as a pharmacy or admin on our system.");
+  //     }
+  //   } catch (error) {
+  //     console.error('Login error:', error);
+  //     alert("Login failed. Please try again.");
+  //   }
+  // };
+  
+  // export { verifyEmail };
+
+  const verifyEmail = async (email) => {
     try {
       const response = await axios.post(
         "http://localhost:9090/userApp/signIn",
@@ -19,30 +56,16 @@ const SignIn = () => {
           email: email,
         }
       );
-  
-      if (response.data.isValid) {
-        // Store the JWT token in local storage
-        if (response.data.token) {
-          localStorage.setItem('jwtToken', response.data.token);
-        }
-  
-        // Store user role
-        localStorage.setItem('userRole', response.data.isSystemAdmin ? 'admin' : 'pharmacy');
-  
-        // Store user ID
-        localStorage.setItem('userId', response.data.isSystemAdmin ? response.data.admin_id : response.data.ph_id);
-  
-        if (!response.data.isSystemAdmin) {
-          navigate(`/pharmacy-admin/${response.data.ph_id}`);
-        } else {
-          navigate(`/system-admin/${response.data.admin_id}`);
-        }
+      if (response.data.isValid && !response.data.isSystemAdmin) {
+        navigate(`/pharmacy-admin/${response.data.ph_id}`);
+      } else if (response.data.isValid && response.data.isSystemAdmin) {
+        navigate(`/system-admin/${response.data.admin_id}`);
       } else {
-        alert("You are not registered as a pharmacy or admin on our system.");
+        alert("You are not registered pharmacy or Admin on our system.");
       }
     } catch (error) {
-      console.error('Login error:', error);
-      alert("Login failed. Please try again.");
+      console.log(error);
+      alert("login failed.");
     }
   };
 
