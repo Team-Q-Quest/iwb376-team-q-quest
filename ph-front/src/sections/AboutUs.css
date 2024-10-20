@@ -1,0 +1,106 @@
+/* Container style with glowing border */
+.about-container {
+    padding: 40px;
+    margin: 40px auto;
+    max-width: 800px;
+    background-color: #f0f4f8;
+    border-radius: 15px;
+    border: 2px solid #007bff;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    color: #333;
+    position: relative;
+    transition: transform 0.5s ease;
+  }
+  
+  /* Glowing border effect */
+  .about-container.loaded {
+    box-shadow: 0 0 20px rgba(0, 128, 255, 0.7), 0 0 30px rgba(0, 128, 255, 0.5);
+    animation: glowing 2s infinite alternate;
+  }
+  
+  /* Glowing border animation */
+  @keyframes glowing {
+    from {
+      box-shadow: 0 0 20px rgba(0, 128, 255, 0.5);
+    }
+    to {
+      box-shadow: 0 0 40px rgba(0, 128, 255, 1);
+    }
+  }
+  
+  /* Loading Spinner */
+  .loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    text-align: center;
+  }
+  
+  .spinner {
+    border: 6px solid #f3f3f3; /* Light grey */
+    border-top: 6px solid #007bff; /* Blue */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1.5s linear infinite;
+  }
+  
+  /* Spin animation for loader */
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  h1.about-heading {
+    color: #007bff;
+    font-family: 'Roboto Slab', serif;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInDown 1s forwards 2.2s;
+  }
+  
+  h2.about-subheading {
+    color: #ff6f61;
+    font-family: 'Merriweather', serif;
+    font-size: 1.75rem;
+    margin-bottom: 15px;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInDown 1s forwards 2.4s;
+  }
+  
+  p.about-text,
+  ul.about-list {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInUp 1s forwards 2.6s;
+  }
+  
+  /* Fade-in and slide-down animations */
+  @keyframes fadeInDown {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Fade-in and slide-up animations */
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
