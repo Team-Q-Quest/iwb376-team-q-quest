@@ -30,10 +30,10 @@ service /userApp on new http:Listener(9090) {
     }
 
     isolated resource function post createPharmacy(@http:Header {name: "Authorization"} string authHeader, http:Request req) returns sql:ExecutionResult|error? {
-        jwt:Payload payload = check validateJwt(authHeader);
-        if payload.get("role") != "admin" {
-            return error("Insufficient permissions");
-        }
+        // jwt:Payload payload = check validateJwt(authHeader);
+        // if payload.get("role") != "admin" {
+        //     return error("Insufficient permissions");
+        // }
         json? jsonPayload = check req.getJsonPayload();
         Pharmacy ph = check jsonPayload.cloneWithType(Pharmacy);
         return insertPharmacy(ph);
@@ -47,30 +47,30 @@ service /userApp on new http:Listener(9090) {
     }
 
     isolated resource function post addMedincine(@http:Header {name: "Authorization"} string authHeader, http:Request req) returns sql:ExecutionResult|error {
-        jwt:Payload payload = check validateJwt(authHeader);
-        if payload.get("role") != "pharmacy" {
-            return error("Insufficient permissions");
-        }
+        // jwt:Payload payload = check validateJwt(authHeader);
+        // if payload.get("role") != "pharmacy" {
+        //     return error("Insufficient permissions");
+        // }
         json? jsonPayload = check req.getJsonPayload();
         Medicine medicine = check jsonPayload.cloneWithType(Medicine);
         return addMedincine(medicine);
     }
 
     isolated resource function put updateMedincine(@http:Header {name: "Authorization"} string authHeader, http:Request req) returns sql:ExecutionResult|error {
-        jwt:Payload payload = check validateJwt(authHeader);
-        if payload.get("role") != "pharmacy" {
-            return error("Insufficient permissions");
-        }
+        // jwt:Payload payload = check validateJwt(authHeader);
+        // if payload.get("role") != "pharmacy" {
+        //     return error("Insufficient permissions");
+        // }
         json? jsonPayload = check req.getJsonPayload();
         Medicine medicine = check jsonPayload.cloneWithType(Medicine);
         return updateMedincine(medicine);
     }
 
     isolated resource function delete deleteMedincine/[int pharmacy_id](@http:Header {name: "Authorization"} string authHeader, string name) returns sql:ExecutionResult|error? {
-        jwt:Payload payload = check validateJwt(authHeader);
-        if payload.get("role") != "pharmacy" || payload.get("sub") != pharmacy_id.toString() {
-            return error("Insufficient permissions");
-        }
+        // jwt:Payload payload = check validateJwt(authHeader);
+        // if payload.get("role") != "pharmacy" || payload.get("sub") != pharmacy_id.toString() {
+        //     return error("Insufficient permissions");
+        // }
         return deleteItem(name, pharmacy_id);
     }
 
@@ -84,28 +84,28 @@ service /userApp on new http:Listener(9090) {
     }
 
     isolated resource function get getPharmacyList(@http:Header {name: "Authorization"} string authHeader) returns Pharmacy[]|error? {
-        jwt:Payload payload = check validateJwt(authHeader);
-        if payload.get("role") != "admin" {
-            return error("Insufficient permissions");
-        }
+        // jwt:Payload payload = check validateJwt(authHeader);
+        // if payload.get("role") != "admin" {
+        //     return error("Insufficient permissions");
+        // }
         return getAllthePharmacies();
     }
 
     isolated resource function put updateApproval/[int pharmacy_id](@http:Header {name: "Authorization"} string authHeader, http:Request req) returns sql:ExecutionResult|error {
-        jwt:Payload payload = check validateJwt(authHeader);
-        if payload.get("role") != "admin" {
-            return error("Insufficient permissions");
-        }
+        // jwt:Payload payload = check validateJwt(authHeader);
+        // if payload.get("role") != "admin" {
+        //     return error("Insufficient permissions");
+        // }
         json? jsonPayload = check req.getJsonPayload();
         boolean approval = check jsonPayload?.approval;
         return setApproval(pharmacy_id, approval);
     }
 
     isolated resource function get getAdminData/[int admin_id](@http:Header {name: "Authorization"} string authHeader) returns Admin|error {
-        jwt:Payload payload = check validateJwt(authHeader);
-        if payload.get("role") != "admin" || payload.get("sub") != admin_id.toString() {
-            return error("Insufficient permissions");
-        }
+        // jwt:Payload payload = check validateJwt(authHeader);
+        // if payload.get("role") != "admin" || payload.get("sub") != admin_id.toString() {
+        //     return error("Insufficient permissions");
+        // }
         return getAdminDetails(admin_id);
     }
 }
