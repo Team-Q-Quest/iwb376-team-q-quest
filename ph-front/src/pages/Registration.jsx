@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 const PharmacyRegistration = () => {
   const [formData, setFormData] = useState({
     name: "",
+    admin_name: "",
+    admin_email: "",
     city: "",
     address: "",
     phone_number: "",
@@ -193,6 +195,44 @@ const PharmacyRegistration = () => {
                       required
                       className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                       value={formData.phone_number}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                  <div>
+                    <label
+                      htmlFor="admin_name"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Admin Name *
+                    </label>
+                    <input
+                      type="text"
+                      name="admin_name"
+                      id="admin_name"
+                      required
+                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                      value={formData.admin_name}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="admin_email"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Admin Email *
+                    </label>
+                    <input
+                      type="text"
+                      name="admin_email"
+                      id="admin_email"
+                      required
+                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                      value={formData.admin_email}
                       onChange={handleInputChange}
                     />
                   </div>
