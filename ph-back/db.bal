@@ -1,6 +1,7 @@
 import ballerina/sql;
 import ballerinax/mysql;
 
+
 configurable int port = 3306;
 configurable string host = "localhost";
 configurable string user = "root";
@@ -42,10 +43,14 @@ isolated function getBestMatch(string medicineList, decimal input_latitude, deci
 
 isolated function insertPharmacy(Pharmacy pharmacy) returns sql:ExecutionResult|error {
     Pharmacy {name, address, city, phone_number, open_hour, close_hour, latitude, longitude} = pharmacy;
-    sql:ParameterizedQuery insertQuery = `INSERT INTO pharmacy (name, address, city, phone_number, open_hour, close_hour, latitude, longitude) VALUES (
-                                            ${name}, ${address}, ${city}, ${phone_number}, ${open_hour}, ${close_hour}, ${latitude}, ${longitude})`;
+    sql:ParameterizedQuery insertQuery = `INSERT INTO pharmacy (name, address, city, phone_number, open_hour, close_hour, latitude, longitude,approval) VALUES (
+                                            ${name}, ${address}, ${city}, ${phone_number}, ${open_hour}, ${close_hour}, ${latitude}, ${longitude},${false})`;
+
+    check sendAdminNotification();
     return dbClient->execute(insertQuery);
 }
+
+
 
 isolated function verifyEmail(Email email) returns SignInResponse|error {
     sql:ParameterizedQuery selectPharmacyAdminQuery = `SELECT pharmacy_id FROM pharmacy_admin where email = ${email.email}`;
@@ -53,17 +58,18 @@ isolated function verifyEmail(Email email) returns SignInResponse|error {
     sql:ExecutionResult|error resultPharmacy = dbClient->queryRow(selectPharmacyAdminQuery);
     sql:ExecutionResult|error resultSystem = dbClient->queryRow(selectSystemAdminQuery);
 
-    SignInResponse res = {ph_id: null,admin_id:null, isValid: false,isSystemAdmin:false};
+    SignInResponse res = {ph_id: null, admin_id: null, isValid: false, isSystemAdmin: false ,token:""};
 
     if (resultPharmacy is sql:ExecutionResult) {
         int ph_id = <int>resultPharmacy.get("pharmacy_id");
-        res.ph_id =ph_id;
-        res.isValid=true;
+        res.ph_id = ph_id;
+        res.isValid = true;
+        
     } else if (resultSystem is sql:ExecutionResult) {
         int admin_id = <int>resultSystem.get("admin_id");
-        res.admin_id= admin_id;
-        res.isValid=true;
-        res.isSystemAdmin=true;    
+        res.admin_id = admin_id;
+        res.isValid = true;
+        res.isSystemAdmin = true;
     }
 
     return res;
@@ -134,7 +140,6 @@ isolated function getPhDetails(int pharmacy_id) returns Pharmacy|error {
     return pharmacy;
 }
 
-
 isolated function getAllthePharmacies() returns Pharmacy[]|error {
     sql:ParameterizedQuery selectQuery = `select p.pharmacy_id, p.name, p.address,p.city,p.phone_number,p.approved,pa.email from pharmacy as p join pharmacy_admin as pa on p.pharmacy_id=pa.pharmacy_id`;
     stream<Pharmacy, error?> pharmacyStream = dbClient->query(selectQuery);
@@ -142,21 +147,15 @@ isolated function getAllthePharmacies() returns Pharmacy[]|error {
         select ph;
 }
 
-
 isolated function setApproval(int pharmacy_id, boolean approval) returns sql:ExecutionResult|error {
     sql:ParameterizedQuery setquery = `update pharmacy set approved =${approval}  where pharmacy_id = ${pharmacy_id}`;
-     return dbClient->execute(setquery);
+    return dbClient->execute(setquery);
 
 }
 
-isolated function getAdminDetails(int admin_id) returns Admin|error{
+isolated function getAdminDetails(int admin_id) returns Admin|error {
     sql:ParameterizedQuery getQuery = `select * from system_admin where admin_id=${admin_id}`;
-    Admin admin = check dbClient->queryRow(getQuery); 
+    Admin admin = check dbClient->queryRow(getQuery);
     return admin;
 }
-
-
-
-
-
 
